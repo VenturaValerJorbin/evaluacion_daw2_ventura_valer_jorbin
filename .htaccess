@@ -1,0 +1,16 @@
+# No muestra el listado de archivos de una carpeta cuando no hay un index
+# MultiViews desactivado: Apache no adivina extensiones de archivo (por ejemplo, /productos como productos.php)
+Options All -Indexes
+Options -MultiViews
+
+# Activa la reescritura de URLs (requiere mod_rewrite)
+RewriteEngine on
+
+# Solo se reescribe si lo pedido no es una carpeta ni un archivo existente,
+# de modo que los archivos reales (imagenes, css, js) se entregan directamente
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+
+# Toda otra ruta se envia a index.php en el parametro "url" (/productos/ver/5 -> index.php?url=productos/ver/5)
+# QSA conserva los parametros de la consulta (?a=1) y L detiene la evaluacion de mas reglas
+RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
